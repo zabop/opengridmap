@@ -178,7 +178,24 @@
                 'line-color': "#000000"
             },
         });
-
+        map.addLayer({
+            "id": "symbols",
+            "type": "symbol",
+            "source": "tileset",
+            "source-layer": 'power_line',
+            "layout": {
+                "symbol-placement": "line",
+                "text-font": ["Open Sans Regular"],
+                "text-field": [
+                    "case",
+                    ["has", "voltage"],
+                    ["concat", ['get', 'voltage'], ' kV'],
+                    "Unknown voltage"
+                ],
+                "text-size": 16
+            }
+        });
+        //^using: https://stackoverflow.com/a/40891062/8565438
         const popup = new mapboxgl.Popup({
             closeButton: true,
             closeOnClick: true
