@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Display a globe on a webpage</title>
+    <title>OpenGridMap</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
@@ -10,9 +10,33 @@
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        #menu {
+        position: absolute;
+        background: #efefef;
+        padding: 10px;
+        font-family: 'Open Sans', sans-serif;
+        }
+    </style>
 </head>
 <body>
 <div id="map"></div>
+
+<div id="menu">
+<input id="satellite-streets-v12" type="radio" name="rtoggle" value="satellite" checked="checked">
+<!-- See a list of Mapbox-hosted public styles at -->
+<!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles -->
+<label for="satellite-streets-v12">satellite streets</label>
+<input id="light-v11" type="radio" name="rtoggle" value="light">
+<label for="light-v11">light</label>
+<input id="dark-v11" type="radio" name="rtoggle" value="dark">
+<label for="dark-v11">dark</label>
+<input id="streets-v12" type="radio" name="rtoggle" value="streets">
+<label for="streets-v12">streets</label>
+<input id="outdoors-v12" type="radio" name="rtoggle" value="outdoors">
+<label for="outdoors-v12">outdoors</label>
+</div>
 
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
@@ -29,7 +53,7 @@
         customAttribution: '<a href="https://openinframap.org/">Open Infrastructure Map</a>'
     }));
 
-    map.on('load', function () {
+    function addLayers() {
 
         map.setFog({});
 
@@ -38,16 +62,13 @@
             tiles: ['https://openinframap.org/tiles/{z}/{x}/{y}.pbf'], // Replace with your tileset URL
             tileSize: 512
         });
-
         map.addSource('mapbox-dem', {
             'type': 'raster-dem',
             'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
             'tileSize': 512,
             'maxzoom': 14
         });
-
         map.setTerrain({ 'source': 'mapbox-dem' });
-
         map.addLayer({
             id: 'unknownkV',
             type: 'line',
@@ -59,7 +80,6 @@
             },
             filter: ['!', ['has', 'voltage']]
         });
-
         // voltage boundaries below are based on: https://github.com/openinframap/openinframap/blob/369af66b7c57f8d7177b71aba4835240e723339c/web-backend/data.py#L10.
         map.addLayer({
             id: '0to10kV',
@@ -177,15 +197,30 @@
             }
 
             popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
-        });
+        });;
+    };
 
-        const geocoder = new MapboxGeocoder({
-            accessToken: mapboxgl.accessToken,
-            mapboxgl: mapboxgl
-        });
-
-        map.addControl(geocoder);
+    map.on('style.load', () => {
+        addLayers();
     });
+
+
+    const geocoder = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+    });
+
+    map.addControl(geocoder)
+
+    const layerList = document.getElementById('menu');
+    const inputs = layerList.getElementsByTagName('input');
+
+    for (const input of inputs) {
+        input.onclick = (layer) => {
+            const layerId = layer.target.id;
+            map.setStyle('mapbox://styles/mapbox/' + layerId);
+        };
+    }
 </script>
 
 </body>
