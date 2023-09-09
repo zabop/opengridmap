@@ -9,6 +9,7 @@
     <style>
         body { margin: 0; padding: 0; }
         #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .mapboxgl-ctrl-geocoder {width: 600px!important;}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -208,11 +209,22 @@
 
             let popupContent = '';
             for (const property in feature.properties) {
-                popupContent += `<strong>${property}:</strong> ${feature.properties[property]}<br>`;
+                if (feature.properties[property]!== "") {
+                    popupContent += `<strong>${property}:</strong> ${feature.properties[property]}<br>`;
+                }
             }
 
             popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
         });;
+
+        // Add a hover interaction to change the cursor type.
+        map.on('mouseenter', 'all', function () {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'all', function () {
+            map.getCanvas().style.cursor = '';
+        });
     };
 
     map.on('style.load', () => {
@@ -222,7 +234,8 @@
 
     const geocoder = new MapboxGeocoder({
         accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl
+        mapboxgl: mapboxgl,
+        placeholder: "Search for a location"
     });
 
     map.addControl(geocoder)
