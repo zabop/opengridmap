@@ -197,7 +197,9 @@
           window.location.hash.substring(1)
         );
         currentParams.set("view", view); // Update the view parameter in the URL hash
-        window.location.hash = currentParams.toString(); // Update the URL hash
+
+        const updatedHash = `#${currentParams.toString().replace(/%2F/g, "/")}`;
+        window.location.hash = updatedHash;
       });
     </script>
   </body>
