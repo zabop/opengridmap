@@ -1,0 +1,189 @@
+[
+  {
+    "id": "unknownkV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1,
+      "line-color": "#bd940d"
+    },
+    "filter": ["!", ["has", "voltage"]]
+  },
+  {
+    "id": "0to10kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.125,
+      "line-color": "#f084fc"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 0],
+      ["<", ["number", ["get", "voltage"]], 10]
+    ]
+  },
+  {
+    "id": "10to25kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.25,
+      "line-color": "#b601ce"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 10],
+      ["<", ["number", ["get", "voltage"]], 25]
+    ]
+  },
+  {
+    "id": "25to52kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.375,
+      "line-color": "#81ce6c"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 25],
+      ["<", ["number", ["get", "voltage"]], 52]
+    ]
+  },
+  {
+    "id": "52to132kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.5,
+      "line-color": "#238a05"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 52],
+      ["<", ["number", ["get", "voltage"]], 132]
+    ]
+  },
+  {
+    "id": "132to220kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.625,
+      "line-color": "#758ef1"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 132],
+      ["<", ["number", ["get", "voltage"]], 220]
+    ]
+  },
+  {
+    "id": "220to330kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.75,
+      "line-color": "#030fa1"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 220],
+      ["<", ["number", ["get", "voltage"]], 330]
+    ]
+  },
+  {
+    "id": "330to550kV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 1.875,
+      "line-color": "#ea0505"
+    },
+    "filter": [
+      "all",
+      [">=", ["number", ["get", "voltage"]], 330],
+      ["<", ["number", ["get", "voltage"]], 550]
+    ]
+  },
+  {
+    "id": "550andAbovekV",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-width": 2,
+      "line-color": "#940000"
+    },
+    "filter": ["all", [">=", ["number", ["get", "voltage"]], 550]]
+  },
+  {
+    "id": "all",
+    "type": "line",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "paint": {
+      "line-opacity": 0,
+      "line-width": 10,
+      "line-color": "#000000"
+    }
+  },
+  {
+    "id": "symbols",
+    "type": "symbol",
+    "source": "tileset",
+    "source-layer": "power_line",
+    "layout": {
+      "symbol-placement": "line",
+      "text-font": ["Open Sans Regular"],
+      "text-field": [
+        "case",
+        ["has", "voltage"],
+        ["concat", ["get", "voltage"], " kV"],
+        "Unknown voltage"
+      ],
+      "text-size": 16
+    }
+  },
+  {
+    "id": "power_pole_outer",
+    "type": "circle",
+    "filter": [
+      "any",
+      ["==", ["get", "type"], "pole"],
+      ["==", ["get", "type"], "tower"]
+    ],
+    "source": "tileset",
+    "source-layer": "power_tower",
+    "minzoom": 13,
+    "paint": {
+      "circle-radius": 4,
+      "circle-color": "#FFFF00"
+    }
+  },
+  {
+    "id": "power_pole",
+    "type": "circle",
+    "filter": [
+      "any",
+      ["==", ["get", "type"], "pole"],
+      ["==", ["get", "type"], "tower"]
+    ],
+    "source": "tileset",
+    "source-layer": "power_tower",
+    "minzoom": 13,
+    "paint": {
+      "circle-radius": 3,
+      "circle-color": "#444444"
+    }
+  }
+]
