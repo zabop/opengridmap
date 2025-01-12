@@ -50,18 +50,18 @@
     />
     <script>
       mapboxgl.accessToken =
-        "pk.eyJ1IjoiemFib3AiLCJhIjoiY2xrNWdxd240MWFvMjNjcDFzcnBkdXRuciJ9.IxZ8EwRRSE1qzyoS56sPYw";
+        "pk.eyJ1IjoiemFib3AiLCJhIjoiY2xrOHAyZGdjMDFsaDNlbWIyODhhc3VoZSJ9.ldiQmCyhLWNt1-U2jDI3PQ";
 
       function getBasemapFromHash() {
         const hash = window.location.hash.substring(1); // Get the part after '#'
         return hash || "light-v11"; // Default to 'light-v11' if hash is empty
       }
 
-      const basemap = getBasemapFromHash();
+      const basemapId = getBasemapFromHash();
 
       const map = new mapboxgl.Map({
         container: "map",
-        style: `mapbox://styles/mapbox/${basemap}`,
+        style: `mapbox://styles/mapbox/${basemapId}`,
         zoom: 4,
         center: [0, 45],
         projection: "globe",
@@ -149,24 +149,27 @@
       const layerList = document.getElementById("menu");
       const inputs = layerList.getElementsByTagName("input");
 
-      function updateRadioButton(selectedBasemap) {
+      function updateRadioButton(selectedBasemapId) {
         for (const input of inputs) {
-          if (input.value === selectedBasemap) {
+          if (input.id === selectedBasemapId) {
             input.checked = true;
             break;
           }
         }
       }
 
-      updateRadioButton(basemap);
+      updateRadioButton(basemapId);
 
       for (const input of inputs) {
         input.onclick = (layer) => {
           const layerId = layer.target.id;
+
+          console.log("layerId", layerId);
+
           map.setStyle("mapbox://styles/mapbox/" + layerId);
 
           // Update the URL hash when the user selects a new basemap
-          window.location.hash = layer.target.value; // Set the hash to the selected basemap
+          window.location.hash = layer.target.id; // Set the hash to the ID of the selected radio button
         };
       }
     </script>
