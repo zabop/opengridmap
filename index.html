@@ -113,12 +113,12 @@
               closeOnClick: true,
             });
 
-            map.on("click", "all", (e) => {
+            function handleMapClick(e) {
               map.getCanvas().style.cursor = "pointer";
 
               const feature = e.features[0];
-
               let popupContent = "";
+
               for (const property in feature.properties) {
                 if (feature.properties[property] !== "") {
                   popupContent += `<strong>${property}:</strong> ${feature.properties[property]}<br>`;
@@ -126,13 +126,25 @@
               }
 
               popup.setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
-            });
+            }
+
+            map.on("click", "all", handleMapClick);
+            map.on("click", "power_substation", handleMapClick);
 
             map.on("mouseenter", "all", function () {
               map.getCanvas().style.cursor = "pointer";
             });
 
+            map.on("mouseenter", "power_substation", function () {
+              console.log("mouseenter");
+              map.getCanvas().style.cursor = "pointer";
+            });
+
             map.on("mouseleave", "all", function () {
+              map.getCanvas().style.cursor = "";
+            });
+
+            map.on("mouseleave", "power_substation", function () {
               map.getCanvas().style.cursor = "";
             });
           })
