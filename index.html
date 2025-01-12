@@ -53,10 +53,10 @@
         "pk.eyJ1IjoiemFib3AiLCJhIjoiY2xrNWdxd240MWFvMjNjcDFzcnBkdXRuciJ9.IxZ8EwRRSE1qzyoS56sPYw";
 
       function getBasemapFromHash() {
-        const hash = window.location.hash.substring(1); // Get the part after '#'
-        return hash || "light-v11"; // Default to 'light-v11' if hash is empty
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        return params.get("basemap") || "light-v11";
       }
-
       const basemapId = getBasemapFromHash();
 
       const map = new mapboxgl.Map({
@@ -170,7 +170,7 @@
           map.setStyle("mapbox://styles/mapbox/" + layerId);
 
           // Update the URL hash when the user selects a new basemap
-          window.location.hash = layer.target.id; // Set the hash to the ID of the selected radio button
+          window.location.hash = "basemap=" + layer.target.id; // Set the hash to the ID of the selected radio button
         };
       }
     </script>
