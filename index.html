@@ -176,10 +176,26 @@
           const currentParams = new URLSearchParams(
             window.location.hash.substring(1)
           );
-          currentParams.set("basemap", layer.target.id);
-          window.location.hash = currentParams.toString();
+          currentParams.set("basemap", layer.target.id); // Set the basemap to the selected radio button
+          window.location.hash = currentParams.toString(); // Update the URL hash
         };
       }
+
+      // Listen for the map moveend event and update the `view` parameter in the URL hash
+      map.on("moveend", function () {
+        const zoom = map.getZoom();
+        const center = map.getCenter();
+        const view = `${zoom.toFixed(0)}/${center.lng.toFixed(
+          6
+        )}/${center.lat.toFixed(6)}`;
+
+        // Update the URL hash with the new view value
+        const currentParams = new URLSearchParams(
+          window.location.hash.substring(1)
+        );
+        currentParams.set("view", view); // Update the view parameter in the URL hash
+        window.location.hash = currentParams.toString(); // Update the URL hash
+      });
     </script>
   </body>
 </html>
