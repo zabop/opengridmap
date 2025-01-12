@@ -52,16 +52,20 @@
       mapboxgl.accessToken =
         "pk.eyJ1IjoiemFib3AiLCJhIjoiY2xrNWdxd240MWFvMjNjcDFzcnBkdXRuciJ9.IxZ8EwRRSE1qzyoS56sPYw";
 
-      function getBasemapFromHash() {
+      function getParamsFromHash() {
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
-        return params.get("basemap") || "light-v11";
+        return {
+          basemap: params.get("basemap") || "light-v11",
+          view: params.get("view") || "19/40.715264/-73.937270", // default view
+        };
       }
-      const basemapId = getBasemapFromHash();
+
+      const { basemap, view } = getParamsFromHash();
 
       const map = new mapboxgl.Map({
         container: "map",
-        style: `mapbox://styles/mapbox/${basemapId}`,
+        style: `mapbox://styles/mapbox/${basemap}`,
         zoom: 4,
         maxZoom: 17,
         center: [0, 45],
@@ -92,7 +96,6 @@
 
         map.setTerrain({ source: "mapbox-dem" });
 
-        // Fetch layers configuration from layers.json
         axios
           .get("layers.json")
           .then((response) => {
@@ -159,7 +162,7 @@
         }
       }
 
-      updateRadioButton(basemapId);
+      updateRadioButton(basemap);
 
       for (const input of inputs) {
         input.onclick = (layer) => {
@@ -170,7 +173,11 @@
           map.setStyle("mapbox://styles/mapbox/" + layerId);
 
           // Update the URL hash when the user selects a new basemap
-          window.location.hash = "basemap=" + layer.target.id; // Set the hash to the ID of the selected radio button
+          const currentParams = new URLSearchParams(
+            window.location.hash.substring(1)
+          );
+          currentParams.set("basemap", layer.target.id);
+          window.location.hash = currentParams.toString();
         };
       }
     </script>
