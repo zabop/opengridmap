@@ -63,12 +63,15 @@
 
       const { basemap, view } = getParamsFromHash();
 
+      // Parse the view parameter into zoom, longitude, and latitude
+      const [zoom, lng, lat] = view.split("/").map(Number);
+
       const map = new mapboxgl.Map({
         container: "map",
         style: `mapbox://styles/mapbox/${basemap}`,
-        zoom: 4,
+        zoom: zoom,
         maxZoom: 17,
-        center: [0, 45],
+        center: [lng, lat],
         projection: "globe",
         attributionControl: false,
       }).addControl(
@@ -185,7 +188,7 @@
       map.on("moveend", function () {
         const zoom = map.getZoom();
         const center = map.getCenter();
-        const view = `${zoom.toFixed(0)}/${center.lng.toFixed(
+        const view = `${zoom.toFixed(2)}/${center.lng.toFixed(
           6
         )}/${center.lat.toFixed(6)}`;
 
